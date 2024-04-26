@@ -1,2 +1,5 @@
 db-data
 static-data
+.env
+settings
+backups
