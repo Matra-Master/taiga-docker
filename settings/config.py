@@ -13,13 +13,14 @@ DEBUG = False
 #    ("Admin", "example@example.com"),
 #)
 
+DATABASE_USER = 'someoneveryimportant'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'taiga',
-        'USER': 'taiga',
         'PASSWORD': 'changeme',
         'HOST': '',
+        'NAME': DATABASE_USER,
+        'USER': DATABASE_USER,
         'PORT': '',
     }
 }
@@ -73,8 +74,12 @@ EMAIL_HOST_PASSWORD = 'password'
 ## EVENTS
 #########################################
 EVENTS_PUSH_BACKEND = "taiga.events.backends.rabbitmq.EventsPushBackend"
+RABBITMQ_USER="aRandomRabbitName" # user to connect to RabbitMQ
+RABBITMQ_PASS="changeme" # RabbitMQ user's password
+RABBITMQ_VHOST="taiga-events-rabbitmq" # RabbitMQ container name
+RABBITMQ_ERLANG_COOKIE="secret-erlang-cookie" # unique value shared by any connected instance of RabbitMQ
 EVENTS_PUSH_BACKEND_OPTIONS = {
-    "url": "amqp://rabbitmquser:rabbitmqpassword@rabbitmqhost:5672/taiga"
+    "url": f"amqp://{ RABBITMQ_USER }:{ RABBITMQ_PASS }@{ RABBITMQ_VHOST }:5672/taiga"
 }
 
 
@@ -85,7 +90,7 @@ CELERY_ENABLED = os.getenv('CELERY_ENABLED', 'True') == 'True'
 
 from kombu import Queue  # noqa
 
-CELERY_BROKER_URL = "amqp://rabbitmquser:rabbitmqpassword@rabbitmq:5672/taiga"
+CELERY_BROKER_URL = f"amqp://{ RABBITMQ_USER }:{ RABBITMQ_PASS }@taiga-async-rabbitmq:5672/taiga"
 CELERY_RESULT_BACKEND = None # for a general installation, we don't need to store the results
 CELERY_ACCEPT_CONTENT = ['pickle', ]  # Values are 'pickle', 'json', 'msgpack' and 'yaml'
 CELERY_TASK_SERIALIZER = "pickle"
