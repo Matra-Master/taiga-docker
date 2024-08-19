@@ -1,6 +1,6 @@
 x-environment:
   &default-back-environment
-  POSTGRES_DB: "taiga"
+  POSTGRES_DB: "${POSTGRES_USER}"
   POSTGRES_USER: "${POSTGRES_USER}"
   POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
   POSTGRES_HOST: "taiga-db"
@@ -26,7 +26,7 @@ x-volumes:
   &default-back-volumes
   - taiga-static-data:/taiga-back/static
   - taiga-media-data:/taiga-back/media
-  # - ./config.py:/taiga-back/settings/config.py
+  - ./settings/config.py:/taiga-back/settings/config.py
 
 services:
   taiga-manage:
