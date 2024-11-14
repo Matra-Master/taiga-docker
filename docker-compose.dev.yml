@@ -28,13 +28,14 @@ x-environment:
   ENABLE_TELEMETRY: "${ENABLE_TELEMETRY}"
   # ...your customizations go here
   ENABLE_SLACK: "True"
+  SERVER_ENV: "prod"
 
 x-volumes:
   &default-back-volumes
   # These volumens will be used by taiga-back and taiga-async.
   - taiga-static-data:/taiga-back/static
   - taiga-media-data:/taiga-back/media
-  #- ./settings/config.py:/taiga-back/settings/config.py
+  - ../taiga-back/docker/config.prod.py:/taiga-back/settings/config.py
 
 services:
   taiga-db:
@@ -61,6 +62,7 @@ services:
       context: ../taiga-back
       dockerfile: ./docker/Dockerfile
     environment: *default-back-environment
+    volumes: *default-back-volumes
     restart: "unless-stopped"
     tty: true
     ports:
@@ -74,9 +76,6 @@ services:
         condition: service_started
       taiga-async-rabbitmq:
         condition: service_started
-    volumes:
-      - ../taiga-back/taiga:/taiga-back/taiga
-      - ../taiga-back/settings:/taiga-back/settings
 
   taiga-async:
     build:
@@ -112,12 +111,13 @@ services:
     build:
       context: ../taiga-front
       dockerfile: ./docker/Dockerfile
+      target: "assemble-build"
     environment:
       TAIGA_URL: "${TAIGA_SCHEME}://${TAIGA_DOMAIN}"
       TAIGA_WEBSOCKETS_URL: "${WEBSOCKETS_SCHEME}://${TAIGA_DOMAIN}"
       TAIGA_SUBPATH: "${SUBPATH}"
       # ...your customizations go here
-      PUBLIC_REGISTER_ENABLED: "false"
+      PUBLIC_REGISTER_ENABLED: "true"
       ENABLE_TRELLO_IMPORTER: "true"
       ENABLE_SLACK: "true"
     restart: "unless-stopped"
