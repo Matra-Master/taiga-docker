@@ -1,0 +1,57 @@
+x-environment:
+  &prod-back-environment
+  DEBUG: "False"
+  # These environment variables will be used by taiga-back and taiga-async.
+  # Database settings
+  POSTGRES_DB: "${POSTGRES_USER}"
+  POSTGRES_USER: "${POSTGRES_USER}"
+  POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  POSTGRES_HOST: "taiga-db"
+  # Taiga settings
+  TAIGA_SECRET_KEY: "${SECRET_KEY}"
+  TAIGA_SITES_SCHEME: "${TAIGA_SCHEME}"
+  TAIGA_SITES_DOMAIN: "${TAIGA_DOMAIN}"
+  TAIGA_SUBPATH: "${SUBPATH}"
+  # Email settings.
+  EMAIL_BACKEND: "django.core.mail.backends.${EMAIL_BACKEND}.EmailBackend"
+  DEFAULT_FROM_EMAIL: "${EMAIL_DEFAULT_FROM}"
+  EMAIL_USE_TLS: "${EMAIL_USE_TLS}"
+  EMAIL_USE_SSL: "${EMAIL_USE_SSL}"
+  EMAIL_HOST: "${EMAIL_HOST}"
+  EMAIL_PORT: "${EMAIL_PORT}"
+  EMAIL_HOST_USER: "${EMAIL_HOST_USER}"
+  EMAIL_HOST_PASSWORD: "${EMAIL_HOST_PASSWORD}"
+  # Rabbitmq settings
+  RABBITMQ_USER: "${RABBITMQ_USER}"
+  RABBITMQ_PASS: "${RABBITMQ_PASS}"
+  # Telemetry settings
+  ENABLE_TELEMETRY: "${ENABLE_TELEMETRY}"
+  # ...your customizations go here
+  ENABLE_SLACK: "True"
+  SERVER_ENV: "prod"
+
+x-volumes:
+  &prod-back-volumes
+  # These volumens will be used by taiga-back and taiga-async.
+  - taiga-static-data:/taiga-back/static
+  - taiga-media-data:/taiga-back/media
+  - ./settings/config.py:/taiga-back/settings/config.py
+
+services:
+  taiga-back:
+    image: tuxditaiga/taiga-back:latest
+    environment: *prod-back-environment
+    volumes: *prod-back-volumes
+    restart: "unless-stopped"
+    tty: true
+    ports:
+      - "8000:8000"
+  taiga-async:
+    image: tuxditaiga/taiga-async:latest
+    entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
+    environment: *prod-back-environment
+    volumes: *prod-back-volumes
+  taiga-front:
+    image: tuxditaiga/taiga-front:latest
+    restart: "unless-stopped"
+    tty: true
