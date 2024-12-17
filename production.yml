@@ -47,7 +47,7 @@ services:
     ports:
       - "8000:8000"
   taiga-async:
-    image: tuxditaiga/taiga-async:latest
+    image: tuxditaiga/taiga-back:latest
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *prod-back-environment
     volumes: *prod-back-volumes
