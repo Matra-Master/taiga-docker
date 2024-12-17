@@ -60,7 +60,7 @@ services:
   taiga-front:
     build:
       context: ../taiga-front
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/prod.Dockerfile
     image: tuxditaiga/taiga-front:latest
     restart: "unless-stopped"
     tty: true
