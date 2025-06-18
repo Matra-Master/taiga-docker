@@ -1,5 +1,9 @@
 # Taiga Docker
 
+## FRAN
+
+La última vez que viniste querías pasar tus archivos de documentación de tus notas de obsidian acá, en una carpeta docu.
+
 | :information_source: | If you're already using taiga-docker, follow this [migration guide](https://docs.taiga.io/upgrades-docker-migrate.html) to use the new `.env` based deployment. |
 |---------------|:----|
 
