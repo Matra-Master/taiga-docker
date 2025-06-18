@@ -44,8 +44,6 @@ services:
     volumes: *prod-back-volumes
     restart: "unless-stopped"
     tty: true
-    ports:
-      - "8000:8000"
   taiga-async:
     image: tuxditaiga/taiga-back:latest
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
