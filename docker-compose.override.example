@@ -1,0 +1,21 @@
+services:
+  taiga-db:
+    volumes:
+      - ./backups/taiga-db-backup.sql:/docker-entrypoint-initdb.d/taiga-db-backup.sql
+      - taiga-db-data:/var/lib/postgresql/data
+  taiga-gateway:
+    networks:
+      taiga:
+      taiga_internal_net:
+        ipv4_address: 192.168.64.12
+
+  adminer:
+    networks:
+      taiga:
+      taiga_internal_net:
+        ipv4_address: 192.168.64.11
+
+networks:
+  taiga:
+  taiga_internal_net:
+    external: true

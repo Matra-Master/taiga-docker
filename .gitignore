@@ -4,3 +4,4 @@ static-data
 settings
 backups
 *.tar
+/docker-compose.override.yml
