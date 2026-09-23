@@ -44,12 +44,16 @@ services:
     volumes: *prod-back-volumes
     restart: "unless-stopped"
     tty: true
+    mem_limit: 288m
+    memswap_limit: 384m
     command: ["--workers", "2", "--max-requests", "500", "--max-requests-jitter", "50"]
   taiga-async:
     image: tuxditaiga/taiga-back:latest
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *prod-back-environment
     volumes: *prod-back-volumes
+    mem_limit: 320m
+    memswap_limit: 448m
     command: ["--concurrency", "2", "--max-tasks-per-child", "100"]
   taiga-front:
     image: tuxditaiga/taiga-front:latest
